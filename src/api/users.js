@@ -1,4 +1,5 @@
-const BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:8080';
+// Base URL: use env var for production builds; in dev the Vite proxy handles /api -> localhost:8080
+const BASE_URL = import.meta.env.VITE_API_URL || '';
 
 export async function registerUser({ username, email }) {
   const res = await fetch(`${BASE_URL}/api/users`, {
