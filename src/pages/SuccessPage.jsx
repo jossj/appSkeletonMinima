@@ -1,6 +1,7 @@
 import { useLocation, useNavigate } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import { getTokenBalance } from '../api/users';
+import WalletSummary from '../components/WalletSummary';
 
 function extractTokens(data) {
   if (!data) return [];
@@ -75,6 +76,8 @@ export default function SuccessPage() {
             This is your unique address on the Minima blockchain. Keep it safe &#8212; others can use it to send you coins.
           </p>
         </div>
+
+        <WalletSummary address={user.minimaAddress} />
 
         <div className="token-section">
           <p className="info-label">Token Balance</p>
