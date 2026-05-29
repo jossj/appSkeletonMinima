@@ -1,5 +1,5 @@
 import { useLocation, useNavigate } from 'react-router-dom';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { getTokenBalance } from '../api/users';
 import WalletSummary from '../components/WalletSummary';
 import AudValueTile from '../components/AudValueTile';
@@ -32,16 +32,22 @@ export default function SuccessPage() {
   const [tokens, setTokens] = useState([]);
   const [balanceLoading, setBalanceLoading] = useState(true);
   const [balanceError, setBalanceError] = useState('');
+  const [balanceVersion, setBalanceVersion] = useState(0);
   const user = state?.user;
 
-  useEffect(() => {
+  const fetchBalance = useCallback(() => {
     if (!user?.minimaAddress) return;
     setBalanceLoading(true);
+    setBalanceError('');
     getTokenBalance(user.minimaAddress)
       .then((data) => setTokens(extractTokens(data)))
       .catch((err) => setBalanceError(err.message))
       .finally(() => setBalanceLoading(false));
   }, [user?.minimaAddress]);
+
+  useEffect(() => {
+    fetchBalance();
+  }, [fetchBalance, balanceVersion]);
 
   if (!user) {
     navigate('/');
@@ -110,7 +116,10 @@ export default function SuccessPage() {
           <AudValueTile tokens={tokens} />
         )}
 
-        <RedTokenTile address={user.minimaAddress} />
+        <RedTokenTile
+          address={user.minimaAddress}
+          onConvertSuccess={() => setBalanceVersion(v => v + 1)}
+        />
 
         <div className="user-details">
           <div className="detail-row">
