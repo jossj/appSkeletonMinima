@@ -4,7 +4,7 @@ import { mintRedTokens } from '../api/users';
 const MIN_VALUE = 10;
 const STEP = 10;
 
-export default function RedTokenTile({ address }) {
+export default function RedTokenTile({ address, onConvertSuccess }) {
   const [dollarValue, setDollarValue] = useState(MIN_VALUE);
   const [loading, setLoading] = useState(false);
   const [result, setResult] = useState(null);
@@ -28,6 +28,7 @@ export default function RedTokenTile({ address }) {
     try {
       const data = await mintRedTokens(address, tokenAmount);
       setResult(data);
+      if (onConvertSuccess) onConvertSuccess();
     } catch (err) {
       setError(err.message);
     } finally {
@@ -68,7 +69,7 @@ export default function RedTokenTile({ address }) {
         {loading ? 'Converting…' : 'Convert'}
       </button>
       {result && (
-        <p className="red-token-success">Tokens minted and sent to your address!</p>
+        <p className="red-token-success">Tokens sent to your address!</p>
       )}
       {error && (
         <p className="balance-status balance-status--error">{error}</p>
