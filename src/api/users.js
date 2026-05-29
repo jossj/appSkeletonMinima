@@ -19,13 +19,13 @@ export async function getUsers() {
 }
 
 export async function getTokenBalance(address) {
-  const res = await fetch(`${BASE_URL}/api/balance?address=${encodeURIComponent(address)}`);
+  const res = await fetch(`${BASE_URL}/api/minima/balance?address=${encodeURIComponent(address)}`);
   if (!res.ok) throw new Error('Failed to fetch balance');
   return res.json();
 }
 
 export async function getBalance(address) {
-  const res = await fetch(`${BASE_URL}/api/balance?address=${encodeURIComponent(address)}`);
+  const res = await fetch(`${BASE_URL}/api/minima/balance?address=${encodeURIComponent(address)}`);
   if (!res.ok) throw new Error('Failed to fetch balance');
   return res.json();
 }
