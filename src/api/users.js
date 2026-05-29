@@ -17,3 +17,9 @@ export async function getUsers() {
   if (!res.ok) throw new Error('Failed to fetch users');
   return res.json();
 }
+
+export async function getTokenBalance(address) {
+  const res = await fetch(`${BASE_URL}/api/balance?address=${encodeURIComponent(address)}`);
+  if (!res.ok) throw new Error('Failed to fetch balance');
+  return res.json();
+}

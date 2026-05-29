@@ -1,11 +1,44 @@
 import { useLocation, useNavigate } from 'react-router-dom';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { getTokenBalance } from '../api/users';
+
+function extractTokens(data) {
+  if (!data) return [];
+  if (Array.isArray(data)) return data;
+  if (Array.isArray(data.tokens)) return data.tokens;
+  if (Array.isArray(data.response)) return data.response;
+  return [];
+}
+
+function getTokenName(token) {
+  if (typeof token.token === 'string') return token.token;
+  if (token.token?.name) return token.token.name;
+  if (token.name) return token.name;
+  if (token.tokenid === '0x00') return 'Minima';
+  return token.tokenid ? token.tokenid.slice(0, 12) + '...' : 'Unknown';
+}
+
+function getTokenAmount(token) {
+  return token.confirmed ?? token.amount ?? token.balance ?? token.total ?? '0';
+}
 
 export default function SuccessPage() {
   const { state } = useLocation();
   const navigate = useNavigate();
   const [copied, setCopied] = useState(false);
+  const [tokens, setTokens] = useState([]);
+  const [balanceLoading, setBalanceLoading] = useState(true);
+  const [balanceError, setBalanceError] = useState('');
   const user = state?.user;
+
+  useEffect(() => {
+    if (!user?.minimaAddress) return;
+    setBalanceLoading(true);
+    getTokenBalance(user.minimaAddress)
+      .then((data) => setTokens(extractTokens(data)))
+      .catch((err) => setBalanceError(err.message))
+      .finally(() => setBalanceLoading(false));
+  }, [user?.minimaAddress]);
 
   if (!user) {
     navigate('/');
@@ -41,6 +74,31 @@ export default function SuccessPage() {
           <p className="info-hint">
             This is your unique address on the Minima blockchain. Keep it safe &#8212; others can use it to send you coins.
           </p>
+        </div>
+
+        <div className="token-section">
+          <p className="info-label">Token Balance</p>
+          {balanceLoading ? (
+            <p className="balance-status">Checking balance&#8230;</p>
+          ) : balanceError ? (
+            <p className="balance-status balance-status--error">Unable to load balance</p>
+          ) : tokens.length === 0 ? (
+            <p className="balance-status">No tokens found at this address</p>
+          ) : (
+            <>
+              <div className="token-list">
+                {tokens.map((token, i) => (
+                  <div key={i} className="token-row">
+                    <span className="token-name">{getTokenName(token)}</span>
+                    <span className="token-amount">{getTokenAmount(token)}</span>
+                  </div>
+                ))}
+              </div>
+              <p className="token-count">
+                {tokens.length} token{tokens.length !== 1 ? 's' : ''} found
+              </p>
+            </>
+          )}
         </div>
 
         <div className="user-details">
