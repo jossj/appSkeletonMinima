@@ -3,6 +3,7 @@ import { useState, useEffect } from 'react';
 import { getTokenBalance } from '../api/users';
 import WalletSummary from '../components/WalletSummary';
 import AudValueTile from '../components/AudValueTile';
+import RedTokenTile from '../components/RedTokenTile';
 
 function extractTokens(data) {
   if (!data) return [];
@@ -108,6 +109,8 @@ export default function SuccessPage() {
         {!balanceLoading && !balanceError && tokens.length > 0 && (
           <AudValueTile tokens={tokens} />
         )}
+
+        <RedTokenTile address={user.minimaAddress} />
 
         <div className="user-details">
           <div className="detail-row">
