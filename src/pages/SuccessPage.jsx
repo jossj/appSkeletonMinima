@@ -2,6 +2,7 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import { getTokenBalance } from '../api/users';
 import WalletSummary from '../components/WalletSummary';
+import AudValueTile from '../components/AudValueTile';
 
 function extractTokens(data) {
   if (!data) return [];
@@ -103,6 +104,10 @@ export default function SuccessPage() {
             </>
           )}
         </div>
+
+        {!balanceLoading && !balanceError && tokens.length > 0 && (
+          <AudValueTile tokens={tokens} />
+        )}
 
         <div className="user-details">
           <div className="detail-row">
