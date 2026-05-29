@@ -23,3 +23,15 @@ export async function getTokenBalance(address) {
   if (!res.ok) throw new Error('Failed to fetch balance');
   return res.json();
 }
+
+export async function getBalance(address) {
+  const res = await fetch(`${BASE_URL}/api/balance?address=${encodeURIComponent(address)}`);
+  if (!res.ok) throw new Error('Failed to fetch balance');
+  return res.json();
+}
+
+export async function getCoins(address) {
+  const res = await fetch(`${BASE_URL}/api/coins?address=${encodeURIComponent(address)}`);
+  if (!res.ok) throw new Error('Failed to fetch coins');
+  return res.json();
+}
