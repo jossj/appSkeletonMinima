@@ -22,7 +22,7 @@ function getTokenName(token) {
 }
 
 function getTokenAmount(token) {
-  return token.confirmed ?? token.amount ?? token.balance ?? token.total ?? '0';
+  return token.sendable ?? token.confirmed ?? token.amount ?? token.balance ?? token.total ?? '0';
 }
 
 export default function SuccessPage() {
