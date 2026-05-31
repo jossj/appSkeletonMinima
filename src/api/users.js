@@ -36,6 +36,12 @@ export async function getCoins(address) {
   return res.json();
 }
 
+export async function getRedTokensRemaining(address) {
+  const res = await fetch(`${BASE_URL}/api/minima/redtokens/remaining?address=${encodeURIComponent(address)}`);
+  if (!res.ok) throw new Error('Failed to fetch remaining red tokens');
+  return res.json();
+}
+
 export async function mintRedTokens(address, amount) {
   const res = await fetch(`${BASE_URL}/api/minima/redtokens`, {
     method: 'POST',
